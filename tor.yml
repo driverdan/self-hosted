@@ -1,0 +1,18 @@
+version: "3"
+services:
+  tor-relay:
+    image: ilshidur/tor-relay
+    environment:
+      - TZ=America/NewYork
+      - RELAY_TYPE=bridge
+      - TOR_Nickname=iprivate1
+      - TOR_RelayBandwidthRate="100 MBytes"
+      - TOR_RelayBandwidthBurst="150 MBytes"
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ./tor:/data
+    ports:
+      - 9001:9001
+      - 9030:9030
+    restart: unless-stopped
