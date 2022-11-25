@@ -1,0 +1,24 @@
+version: "3"
+services:
+
+  bookstack-db:
+    image: linuxserver/mariadb
+    container_name: bookstack-db
+    hostname: bookstack-db
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./bookstack-db-data:/config
+
+  bookstack:
+    image: linuxserver/bookstack
+    container_name: bookstack
+    hostname: bookstack
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      - bookstack-db
+    volumes:
+      - ./bookstack-data:/config
+    ports:
+      - 6875:6875
