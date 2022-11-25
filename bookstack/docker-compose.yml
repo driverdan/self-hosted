@@ -21,4 +21,4 @@ services:
     volumes:
       - ./bookstack-data:/config
     ports:
-      - 6875:6875
+      - 6875:80
