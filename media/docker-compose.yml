@@ -26,7 +26,7 @@ services:
       - UMASK=002
     volumes:
       - ./sonarr:/config
-      - /media/Media/TV:/tv
+      - /media/TV:/tv
       - /home/dan/downloads:/downloads
     ports:
       - 8989:8989
@@ -85,10 +85,11 @@ services:
       - TZ=America/NewYork
       - PLEX_UID=1000
       - PLEX_GID=1000
-      - PLEX_CLAIM=<claimToken>
+      - PLEX_CLAIM=${PLEX_CLAIM}
     network_mode: host
     volumes:
       - ./plex:/config
       - /media/Media:/data
+      - /media/TV:/TV
     devices:
       - "/dev/dri:/dev/dri"

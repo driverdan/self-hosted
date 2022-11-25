@@ -5,13 +5,13 @@ services:
     environment:
       - TZ=America/NewYork
       - RELAY_TYPE=bridge
-      - TOR_Nickname=iprivate1
+      - TOR_Nickname=${TOR_NICKNAME}
       - TOR_RelayBandwidthRate="100 MBytes"
       - TOR_RelayBandwidthBurst="150 MBytes"
       - PUID=1000
       - PGID=1000
     volumes:
-      - ./tor:/data
+      - ./data:/data
     ports:
       - 9001:9001
       - 9030:9030
