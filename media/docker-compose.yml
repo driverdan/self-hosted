@@ -42,7 +42,7 @@ services:
       - UMASK=002
     volumes:
       - ./lidarr:/config
-      - /media/Media/Music:/music
+      - /media/Music:/music
       - /home/dan/downloads:/downloads
     ports:
       - 8686:8686
@@ -91,5 +91,7 @@ services:
       - ./plex:/config
       - /media/Media:/data
       - /media/TV:/TV
+      - /media/Music:/Music
+      - "/media/Old Movies:/OldMovies"
     devices:
       - "/dev/dri:/dev/dri"
