@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  piper:
+    container_name: piper
+    image: rhasspy/wyoming-piper
+    restart: unless-stopped
+    ports:
+      - '10200:10200'
+    volumes:
+      - './piper-data:/data'
+    command: --voice en_GB-alan-low --debug
+
+  whisper:
+    container_name: whisper
+    image: rhasspy/wyoming-whisper
+    restart: unless-stopped
+    ports:
+      - '10300:10300'
+    volumes:
+      - './whisper-data:/data'
+    command: --model base-int8 --language en
+
+  openwakeword:
+    container_name: openwakeword
+    image: rhasspy/wyoming-openwakeword
+    restart: unless-stopped
+    ports:
+      - '10400:10400'
+    volumes:
+      - './openwakeword-data:/data'
+    command: --preload-model 'hey_jarvis'
