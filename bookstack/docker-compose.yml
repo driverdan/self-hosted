@@ -1,6 +1,4 @@
-version: "3"
 services:
-
   bookstack-db:
     image: linuxserver/mariadb
     container_name: bookstack-db
