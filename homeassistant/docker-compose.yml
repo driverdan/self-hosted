@@ -29,7 +29,7 @@ services:
     volumes:
       - ./homeassistant-data:/config
       - /etc/localtime:/etc/localtime:ro
-      - ../tls-certs:/tls-certs
+      - /home/dan/tls-certs:/tls-certs
     restart: unless-stopped
     privileged: true
     network_mode: host
