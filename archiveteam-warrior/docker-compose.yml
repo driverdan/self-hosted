@@ -21,3 +21,5 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: "true"
     restart: always
+    volumes:
+      - ./projects:/home/warrior/projects
