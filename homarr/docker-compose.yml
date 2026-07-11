@@ -1,0 +1,16 @@
+services:
+  homarr:
+    container_name: homarr
+    image: ghcr.io/homarr-labs/homarr:latest
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
+      - ./appdata:/appdata
+    environment:
+      - SECRET_ENCRYPTION_KEY=${SECRET_ENCRYPTION_KEY}
+    ports:
+      - '7575:7575'
+    extra_hosts:
+      - "canuck:100.66.31.51"
+      - "canuck.ghoul-gray.ts.net:100.66.31.51"
+      - "busstation:100.98.43.167"
