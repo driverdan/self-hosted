@@ -1,0 +1,58 @@
+services:
+  db:
+    # TimescaleDB image that bundles PostGIS — gives us hypertables + spatial types together.
+    image: timescale/timescaledb-ha:pg16
+    container_name: localdash-db
+    environment:
+      POSTGRES_USER: localdash
+      POSTGRES_PASSWORD: localdash
+      POSTGRES_DB: localdash
+    ports:
+      - "5432"
+    volumes:
+      - localdash_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U localdash"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    image: driverdan/localdash:latest
+    container_name: localdash-app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # Inside the compose network the database is reached at host "db".
+      DATABASE_URL: postgresql+asyncpg://localdash:localdash@db:5432/localdash
+      # User-facing site name (header, browser tab, API docs). Change and restart
+      # — no rebuild needed; interpolated from .env like the keys below.
+      SITE_NAME: chatt.city
+      # Interpolated from .env (compose reads it for ${...} substitution even
+      # though the file itself is not mounted); empty disables the AQI fetch.
+      AIRNOW_API_KEY: ${AIRNOW_API_KEY:-}
+    # Optionally override source tokens / tile layer here or via a .env file:
+    # env_file: .env
+    ports:
+      - "8010:8000"
+    restart: unless-stopped
+
+  # Cloudflare named tunnel — exposes the app publicly over HTTPS without opening
+  # any inbound ports (cloudflared dials OUT to Cloudflare, so it works behind NAT).
+  # Opt-in: only starts with `docker compose --profile tunnel up`. Create the tunnel
+  # in the Cloudflare Zero Trust dashboard, route its public hostname to
+  # http://app:8000, and put the tunnel token in .env as CLOUDFLARE_TUNNEL_TOKEN.
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: localdash-tunnel
+    profiles: ["tunnel"]
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN:?set CLOUDFLARE_TUNNEL_TOKEN in .env}
+    depends_on:
+      - app
+    restart: unless-stopped
+
+volumes:
+  localdash_pgdata:
